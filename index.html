@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Perguntas</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.js"></script>
+</head>
+<body>
+    <h1>Adicionar Pergunta</h1>
+    <form id="questionForm">
+        <label for="question">Pergunta:</label>
+        <input type="text" id="question" required>
+        
+        <label for="option1">Opção 1:</label>
+        <input type="text" id="option1" required>
+        
+        <label for="option2">Opção 2:</label>
+        <input type="text" id="option2" required>
+        
+        <label for="option3">Opção 3:</label>
+        <input type="text" id="option3" required>
+        
+        <label for="option4">Opção 4:</label>
+        <input type="text" id="option4" required>
+        
+        <label for="correctAnswer">Resposta Correta:</label>
+        <input type="text" id="correctAnswer" required>
+        
+        <button type="submit">Adicionar Pergunta</button>
+    </form>
+
+    <script>
+        const supabaseUrl = 'https://YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        document.getElementById('questionForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const question = document.getElementById('question').value;
+            const options = [
+                document.getElementById('option1').value,
+                document.getElementById('option2').value,
+                document.getElementById('option3').value,
+                document.getElementById('option4').value
+            ];
+            const correctAnswer = document.getElementById('correctAnswer').value;
+
+            const { data, error } = await supabase
+                .from('questions') // Nome da tabela onde você armazena as perguntas
+                .insert([{ question, options, correct_answer: correctAnswer }]);
+
+            if (error) {
+                alert('Erro ao adicionar a pergunta: ' + error.message);
+            } else {
+                alert('Pergunta adicionada com sucesso!');
+                document.getElementById('questionForm').reset(); // Limpa o formulário
+            }
+        });
+    </script>
+</body>
+</html>
